@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 public class BannerAds {
     static AdsModel adsModel = new AdsModel();
-    private static String getAdsURL(Activity activity,String categoryId) {
+    public static String getAdsURL(Activity activity,String categoryId) {
         Server.getInstance(new OnProgressListener() {
             @Override
             public void onFailure() {
