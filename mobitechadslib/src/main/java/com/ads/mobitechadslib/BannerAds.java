@@ -9,8 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BannerAds {
-    AdsModel adsModel = new AdsModel();
-    private String getAdsURL(Activity activity,String categoryId) {
+    static AdsModel adsModel = new AdsModel();
+    private static String getAdsURL(Activity activity,String categoryId) {
         Server.getInstance(new OnProgressListener() {
             @Override
             public void onFailure() {
