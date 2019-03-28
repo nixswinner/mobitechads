@@ -73,6 +73,7 @@ public class MobitechAds {
         }).request("http://ads.mobitechtechnologies.com/api/serve_ads/"+categoryId);
     }
 
+    // show intertistial ad
     public static void showIntertistial(Activity activity,String ad_imageUrl,
                                         String click_url_redirect){
         Dialog dialog = new Dialog(activity,
@@ -118,7 +119,7 @@ public class MobitechAds {
             }
         });
     }
-    public AdsModel getBannerAdValues(String response){
+    public static AdsModel getBannerAdValues(String response){
         AdsModel adsModel = new AdsModel();
         try {
             JSONObject jsonObject = new JSONObject(response);
