@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -128,6 +130,11 @@ public class BannerAds {
         //show image
         Glide.with(activity)
                 .load(ad_imageUrl).into(image);
+        image.setOnClickListener(v->{
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(ad_imageUrl));
+            activity.startActivity(i);
+        });
 
         imgCancle.setOnClickListener(v->{
             dialog.dismiss();
