@@ -24,7 +24,10 @@ public class MainActivity extends AppCompatActivity {
         /*TestClass.alertDialog(MainActivity.this);
         TestClass.getButtonAction(MainActivity.this);*/
 
-        MyDialog(MainActivity.this);
+        //MyDialog(MainActivity.this);
+
+        //BannerAds.getIntertistial(MainActivity.this,"1");
+
 
     }
 

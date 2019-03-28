@@ -15,14 +15,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BannerAds {
-    static AlertDialog.Builder alertDialog;
-    public static void alertDialog(Activity activity){
+public class MobitechAds {
 
-        alertDialog.show();
-    }
     static AdsModel adsModel = new AdsModel();
-    public static String getAdsURL(Activity activity,String categoryId) {
+    public static void getAllAds(Activity activity,String categoryId){
+        getBannerAd(activity,categoryId);
+        getIntertistialAd(activity,categoryId);
+    }
+    public static String getBannerAd(Activity activity,String categoryId) {
         Server.getInstance(new OnProgressListener() {
             @Override
             public void onFailure() {
@@ -70,7 +70,7 @@ public class BannerAds {
     }
 
 
-    public static String getIntertistial(Activity activity,String categoryId) {
+    public static void getIntertistialAd(Activity activity,String categoryId) {
         Server.getInstance(new OnProgressListener() {
             @Override
             public void onFailure() {
@@ -93,20 +93,13 @@ public class BannerAds {
                                 adsModel.setInterstitial_upload(String.valueOf(interstitial.get("interstitial_upload")));
                                 adsModel.setInterstitial_urlandroid(String.valueOf(interstitial.get("interstitial_urlandroid")));
                                 adsModel.setInterstitial_urlios(String.valueOf(interstitial.get("interstitial_urlios")));
-
-                                Log.i("tag", "<======= ==========>");
-                                Log.i("tag", "run: "+adsModel.toString());
-                                Log.i("tag", "<======= ==========>");
                                 //show intertistial
-                                showIntertistial(activity,adsModel.getAd_upload());
-
-                                //Glide.with(getApplicationContext()).load(adsModel.getAd_upload()).into(imageView);
-
+                                showIntertistial(activity,adsModel.getInterstitial_upload(),
+                                        adsModel.getAd_urlandroid());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
 
                 });
@@ -116,26 +109,25 @@ public class BannerAds {
             public void onStart() {
             }
         }).request("http://ads.mobitechtechnologies.com/api/serve_ads/"+categoryId);
-        return adsModel.getAd_upload();
     }
 
-    public static void showIntertistial(Activity activity,String ad_imageUrl){
+    public static void showIntertistial(Activity activity,String ad_imageUrl,
+                                        String click_url_redirect){
         Dialog dialog = new Dialog(activity,
                 android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.setContentView(R.layout.intertistial_dialog);
         dialog.setCancelable(true);
         ImageView image = dialog.findViewById(R.id.imageView);
         ImageView imgCancle = dialog.findViewById(R.id.cancle);
-
         //show image
         Glide.with(activity)
                 .load(ad_imageUrl).into(image);
         image.setOnClickListener(v->{
+            //on click open browser
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(ad_imageUrl));
+            i.setData(Uri.parse(click_url_redirect));
             activity.startActivity(i);
         });
-
         imgCancle.setOnClickListener(v->{
             dialog.dismiss();
         });
