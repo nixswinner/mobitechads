@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                     adsModel.getAd_urlandroid());
         });
         //change the category id here
-       Observable<Response> observable = getBannerAds("1");
+      /* Observable<Response> observable = getBannerAds("1");
        observable.subscribe(new Observer<Response>() {
            @Override
            public void onSubscribe(Disposable d) {
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
            @Override
            public void onComplete() {
            }
-       });
+       });*/
 
        //...............................end of banner ad ........................
     }
