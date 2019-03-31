@@ -16,13 +16,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.ads.mobitechads.MobiAdBanner
-        android:id="@+id/bannerAd"
-        android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:padding="6dp"
-        />
+  <com.ads.mobitechadslib.MobiAdBanner
+      android:id="@+id/bannerAd"
+      android:layout_gravity="center"
+      android:scaleType="fitXY"
+      android:layout_width="320dp"
+      android:layout_height="50dp"
+      android:padding="6dp" />
+
 
 </LinearLayout>

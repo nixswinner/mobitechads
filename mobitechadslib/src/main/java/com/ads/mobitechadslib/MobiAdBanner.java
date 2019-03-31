@@ -2,6 +2,7 @@ package com.ads.mobitechadslib;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -9,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 
 public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
         implements View.OnClickListener {
@@ -36,8 +39,19 @@ public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
     }
 
     public void showAd(Context context,String banner_ad_url){
+        /*Glide.with(context)
+                .load(banner_ad_url).into(this);*/
         Glide.with(context)
-                .load(banner_ad_url).into(this);
+                .asBitmap()
+                .load(banner_ad_url)
+                .into(new BitmapImageViewTarget(this) {
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        //Play with bitmap
+                        super.setResource(resource);
+                    }
+                });
+
     }
 
 
