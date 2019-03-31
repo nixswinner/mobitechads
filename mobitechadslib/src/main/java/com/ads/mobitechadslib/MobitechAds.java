@@ -116,7 +116,6 @@ public class MobitechAds {
                     subscriber.onNext(response);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    subscriber.onError(e);
                 }
             }
         }).subscribeOn(Schedulers.io())

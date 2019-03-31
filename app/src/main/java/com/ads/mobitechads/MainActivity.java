@@ -1,5 +1,6 @@
 package com.ads.mobitechads;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -37,10 +38,12 @@ public class MainActivity extends AppCompatActivity {
     private MobiAdBanner mobiAdBanner;
     private CompositeDisposable disposable = new CompositeDisposable();
     private String adCategory="3";
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = MainActivity.this;
 
        // ....................Intertistial Ad ...............
        MobitechAds.getIntertistialAd(
@@ -61,9 +64,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // whatever you need to do every 2 seconds
+                Observable<Response> observable = getBannerAd(adCategory);
+                observable.subscribe(new Observer<Response>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable.add(d);
+                    }
+                    @Override
+                    public void onNext(Response response) {
+                        try {
+                            Log.e("Observer", "onNext: " );
+                            adsModel = getBannerAdValues(response.body().string());
+                            mobiAdBanner.showAd(context,
+                                    adsModel.getAd_upload());
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("Observer", "onError : "+e.getMessage() );
+                    }
+                    @Override
+                    public void onComplete() {
+                    }
+                });
             }
         };
-        timer.schedule(myTask, 1000, 5000);
+        timer.schedule(myTask, 100, 5000);
 
 
         Observable<Response> observable = getMyBannerAd(adCategory);
@@ -74,31 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onNext(Long aLong) {
-                        observable.subscribe(new Observer<Response>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                disposable.add(d);
-                            }
-                            @Override
-                            public void onNext(Response response) {
-                                try {
-                                    Log.e("Observer", "onNext: " );
-                                    adsModel = getBannerAdValues(response.body().string());
-                                    mobiAdBanner.showAd(MainActivity.this,
-                                            adsModel.getAd_upload());
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("Observer", "onError : "+e.getMessage() );
-                            }
-                            @Override
-                            public void onComplete() {
-                            }
-                        });
                     }
                     @Override
                     public void onError(Throwable e) {
