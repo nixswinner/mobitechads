@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private MobiAdBanner mobiAdBanner;
     private CompositeDisposable disposable = new CompositeDisposable();
     private String adCategory="3";
+    private float BannerRefresh = 20;//default 20 seconds
     private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +61,10 @@ public class MainActivity extends AppCompatActivity {
             mobiAdBanner.viewBannerAd(MainActivity.this,
                     adsModel.getAd_urlandroid());
         });
-        //change the category id here
         Timer timer = new Timer();
         TimerTask myTask = new TimerTask() {
             @Override
             public void run() {
-                // whatever you need to do every 2 seconds
                 Observable<Response> observable = getBannerAd(adCategory);
                 observable.subscribe(new Observer<Response>() {
                     @Override
@@ -75,75 +74,25 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Response response) {
                         try {
-                            Log.e("Observer", "onNext: " );
                             adsModel = getBannerAdValues(response.body().string());
                             mobiAdBanner.showAd(context,
                                     adsModel.getAd_upload());
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("Observer", "onError : "+e.getMessage() );
+                        Log.e("Banner", "onError : "+e.getMessage() );
                     }
                     @Override
                     public void onComplete() {
                     }
                 });
             }
-        };
-        timer.schedule(myTask, 100, 5000);
+        };timer.schedule(myTask, 100, 20000);//refresh after
 
        //...............................end of banner ad ........................
-
-
-        Observable<String> myobStringObservable = getMydata();
-        myobStringObservable.interval(1,TimeUnit.SECONDS)
-                .subscribe(new Observer<Long>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Long aLong) {
-                        /*myobStringObservable.subscribe(new Observer<String>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onNext(String s) {
-                                Log.e("MyObservable", "onNext: "+s );
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("MyObservable", "onError: "+e.getMessage() );
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });*/
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
 
     }
 

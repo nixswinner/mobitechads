@@ -15,8 +15,6 @@ import com.bumptech.glide.request.target.Target;
 
 public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
         implements View.OnClickListener {
-
-   // private Context context;
     public MobiAdBanner(Context context) {
         super(context);
         init(null);
@@ -39,15 +37,12 @@ public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
     }
 
     public void showAd(Context context,String banner_ad_url){
-        /*Glide.with(context)
-                .load(banner_ad_url).into(this);*/
         Glide.with(context)
                 .asBitmap()
                 .load(banner_ad_url)
                 .into(new BitmapImageViewTarget(this) {
                     @Override
                     protected void setResource(Bitmap resource) {
-                        //Play with bitmap
                         super.setResource(resource);
                     }
                 });
@@ -57,9 +52,6 @@ public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
 
     @Override
     public void onClick(View v) {
-        /*Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse("https://google.com"));
-        context.startActivity(i);*/
     }
 
     @Override
