@@ -1,13 +1,10 @@
 package com.ads.mobitechadslib;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.StrictMode;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -74,7 +71,6 @@ public class MobitechAds {
             }
         }).request("http://ads.mobitechtechnologies.com/api/serve_ads/"+categoryId);
     }
-
     // show intertistial ad
     public static void showIntertistial(Activity activity,String ad_imageUrl,
                                         String click_url_redirect){
@@ -99,7 +95,6 @@ public class MobitechAds {
         dialog.show();
     }
     //banner ads .....
-
     public static Observable<Response> getBannerAd(String categoryId) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
