@@ -9,6 +9,7 @@ import android.util.Log;
 import com.ads.mobitechadslib.AdsModel;
 import com.ads.mobitechadslib.MobiAdBanner;
 import com.ads.mobitechadslib.MobitechAds;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = MainActivity.this;
+
 
        // ....................Intertistial Ad ...............
        MobitechAds.getIntertistialAd(
@@ -93,25 +95,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         timer.schedule(myTask, 100, 5000);
-
-
-        Observable<Response> observable = getMyBannerAd(adCategory);
-        observable.interval(5,TimeUnit.SECONDS)
-                .subscribe(new Observer<Long>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-                    @Override
-                    public void onNext(Long aLong) {
-
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-                    @Override
-                    public void onComplete() {
-                    }
-                });
 
        //...............................end of banner ad ........................
 
