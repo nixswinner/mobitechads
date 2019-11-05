@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private AdsModel adsModel ;
     private MobiAdBanner mobiAdBanner;
     private CompositeDisposable disposable = new CompositeDisposable();
-    private String adCategory="3";
+    private String adCategory="2";
     private float BannerRefresh = 20;//default 20 seconds
     private Context context;
     @Override
