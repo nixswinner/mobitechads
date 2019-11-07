@@ -2,26 +2,18 @@ package com.ads.mobitechads;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.ads.mobitechadslib.AdsModel;
 import com.ads.mobitechadslib.MobiAdBanner;
 import com.ads.mobitechadslib.MobitechAds;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity {
     private AdsModel adsModel ;
     private MobiAdBanner mobiAdBanner;
-    private CompositeDisposable disposable = new CompositeDisposable();
     private String adCategory="2";
     private float BannerRefresh = 20;//default 20 seconds
     private Context context;
@@ -45,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
                adCategory);*/
 
         //Refreshing banner
+        //For refreshing banner add refreshRate in minutes after category id
         //refresh rate in minutes
         mobiAdBanner.getBannerAds(context,
                 adCategory,1);
@@ -60,6 +53,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        disposable.dispose();
     }
 }

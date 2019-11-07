@@ -80,12 +80,12 @@ public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
     }
 
     //has refresh rate in
-    public void getBannerAds(Context mcontext,String categoryId,
+    public void getBannerAds(Context mcontext, final String categoryId,
                              int refreshRate){
         context = mcontext;
         fetchBannerAds(categoryId);
-        Handler handler = new Handler();
-        int delay = (refreshRate*60000); //milliseconds
+        final Handler handler = new Handler();
+        final int delay = (refreshRate*60000); //milliseconds
         handler.postDelayed(new Runnable(){
             public void run(){
                 Log.e("Mobitech Banner ","Refreshing Banner ...");
@@ -100,7 +100,7 @@ public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
         fetchBannerAds(categoryId);
     }
     //fetch banner ads
-    private void fetchBannerAds(String categoryId){
+    private void fetchBannerAds(final String categoryId){
         new Thread()
         {
             @Override
