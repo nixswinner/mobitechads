@@ -24,13 +24,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
+public class MobiAdBanner extends  android.support.v7.widget.AppCompatImageView
         implements View.OnClickListener {
     public MobiAdBanner(Context context) {
         super(context);
         init(null);
     }
-    private List<Ads> BannerAdsResult = new ArrayList();
+    private Ads BannerAdsResult = null;
     private Ads adsBannerItem;
     private Context context;
     public MobiAdBanner(Context context, AttributeSet attrs) {
@@ -79,33 +79,34 @@ public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
     }
 
     //has refresh rate in
-    public void getBannerAds(Context mcontext, final String categoryId,
+    public void getBannerAds(Context mcontext, final String applicationId,final String categoryId,
                              int refreshRate){
         context = mcontext;
-        fetchBannerAds(categoryId);
+        fetchBannerAds(applicationId,categoryId);
         final Handler handler = new Handler();
         final int delay = (refreshRate*60000); //milliseconds
         handler.postDelayed(new Runnable(){
             public void run(){
                 Log.e("Mobitech Banner ","Refreshing Banner ...");
-                fetchBannerAds(categoryId);
+                fetchBannerAds(applicationId,categoryId);
                 handler.postDelayed(this, delay);
             }
         }, delay);
     }
     //no refresh rate
-    public void getBannerAds(Context mcontext,String categoryId){
+    public void getBannerAds(Context mcontext,String applicationId,String categoryId){
         context = mcontext;
-        fetchBannerAds(categoryId);
+        fetchBannerAds(applicationId,categoryId);
     }
     //fetch banner ads
-    private void fetchBannerAds(final String categoryId){
+    private void fetchBannerAds(final String applicationId,
+                                final String categoryId){
         new Thread()
         {
             @Override
             public void run() {
                 super.run();
-                BannerAdsResult.addAll(getTheBannerAds(categoryId));
+                BannerAdsResult=getTheBannerAds(applicationId,categoryId);
                 handler.sendEmptyMessage(0);
             }
         }.start();
@@ -114,11 +115,11 @@ public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
     {
         @Override
         public void handleMessage(Message msg) {
-            Collections.shuffle(BannerAdsResult);
-            if (BannerAdsResult.size()>0){
-               if (BannerAdsResult.get(0).getAd_urlandroid()!=null){
-                    showAd(context,BannerAdsResult.get(0).getAd_upload());
-                   adsBannerItem = BannerAdsResult.get(0);
+            //Collections.shuffle(BannerAdsResult);
+            if (BannerAdsResult!=null){
+               if (BannerAdsResult.getAd_urlandroid()!=null){
+                    showAd(context,BannerAdsResult.getAd_upload());
+                   adsBannerItem = BannerAdsResult;
                 }else {
                    Log.e("Mobitech Banner Ad ","Failed to Load");
                }
@@ -126,22 +127,23 @@ public class MobiAdBanner extends android.support.v7.widget.AppCompatImageView
 
         }
     };
-    public static List<Ads> getTheBannerAds(String categoryId){
-        List<Ads> adsResult = new ArrayList();
+    public static Ads getTheBannerAds(String applicationId,String categoryId){
+        Ads bannerAds=null;
         try {
+
             AdsResult response =ApiService.Companion
-                    .create().getAds(categoryId)
+                    .create().getAds(categoryId,applicationId)
                     .execute().body();
-            if (!response.getData().isEmpty()){
+            if (response.getData()!=null){
                 Log.e("Mobitech Banner ","available");
-                adsResult.addAll(response.getData());
+                bannerAds = response.getData();
             }else {
                 Log.e("Mobitech Banner ","No ads available");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return adsResult;
+        return bannerAds;
     }
 
     @Override

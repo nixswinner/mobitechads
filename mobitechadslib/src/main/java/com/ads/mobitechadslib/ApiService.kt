@@ -1,7 +1,6 @@
 package com.ads.mobitechadslib
 
 import android.arch.lifecycle.LiveData
-import com.ads.mobitechadslib.model.Ads
 import com.ads.mobitechadslib.model.AdsResult
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -18,15 +17,16 @@ interface ApiService {
                             RxJava2CallAdapterFactory.create())
                     .addConverterFactory(
                             GsonConverterFactory.create())
-                    .baseUrl("http://ads.mobitechtechnologies.com/api/")
+                    .baseUrl("http://ads.mobitechads.com/api/")
                     .build()
 
             return retrofit.create(ApiService::class.java)
         }
     }
     //get all the subjects
-    @GET("serve_ads/{category_id}")
-    fun getAds(@Path("category_id") categoryId:String): Call<AdsResult>
+    @GET("serve_ads/{category_id}/{app_id}")
+    fun getAds(@Path("category_id") categoryId:String,
+               @Path("app_id") app_id:String): Call<AdsResult>
 
     @GET("serve_ads/{category_id}")
     fun getAdsLiveData(@Path("category_id") categoryId:String): LiveData<AdsResult>

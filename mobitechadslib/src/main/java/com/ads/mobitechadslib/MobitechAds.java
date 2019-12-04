@@ -1,10 +1,14 @@
 package com.ads.mobitechadslib;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,28 +23,37 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MobitechAds {
 
     static AdsModel adsModel = new AdsModel();
-    private static List<Ads> adsList = new ArrayList();
+    private static Ads adsList = null;
     private List<Ads> BannerAdsResult = new ArrayList();
     private Context bannerContext;
     private MobiAdBanner bannerAdObject;
-
+    private String country_code;
     //show intertistial
-    public static void getIntertistialAd(final Activity activity, String categoryId) {
+    public static void getIntertistialAd(final Activity activity, String applicationId,
+                                         String categoryId) {
+
+        //...........
         ApiService.Companion.create()
-                .getAds(categoryId)
+                .getAds(categoryId,applicationId)
                 .enqueue(new Callback<AdsResult>() {
                     @Override
-                    public void onResponse(Call<AdsResult> call, retrofit2.Response<AdsResult> response) {
+                    public void onResponse(Call<AdsResult> call,
+                                           retrofit2.Response<AdsResult> response) {
                         if (response.isSuccessful()){
-                            Log.e("Mobitech Intertistial","Ad Loaded successfully");
-                            adsList.addAll(response.body().getData());
+                            Log.e("Mobitech Intertistial","Ad Loaded successfully ");
+                            adsList=response.body().getData();
                             populateAdsList(response.body().getData(),activity);
+                            Log.e("App Name ","---"+getApplicationName(activity));
+                            Log.e("App Phone Manufacturer ","---"+getDeviceName());
+                            Log.e("App Country  ","---"+getAppCountryCode(activity));
+
                         }else {
-                            Log.e("Mobitech Intertistial","Ad Failed to Load "+response.message());
+                            Log.e("Mobitech Intertistial","Ad Failed to Load ");
                         }
                     }
                     @Override
@@ -49,12 +62,11 @@ public class MobitechAds {
                     }
                 });
     }
-    private static void populateAdsList(List<Ads> adList,Activity activity){
-        Collections.shuffle(adList);//shuffle list
-        if (adList.size()>0){
+    private static void populateAdsList(Ads adList,Activity activity){
+        if (adList!=null){
             //show intertistial
-            showIntertistial(activity, adList.get(0).getInterstitial_upload(),
-                    adList.get(0).getInterstitial_urlandroid());
+            showIntertistial(activity, adList.getInterstitial_upload(),
+                    adList.getInterstitial_urlandroid());
         }
     }
     // show intertistial ad
@@ -82,7 +94,6 @@ public class MobitechAds {
                 }
             }
         });
-
         imgCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,4 +103,27 @@ public class MobitechAds {
         dialog.show();
     }
     //banner ads .....
+
+    //get App Name
+    public static String getApplicationName(Context context) {
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        int stringId = applicationInfo.labelRes;
+        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
+    }
+    //get device
+    public  static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+            return (model);
+        } else {
+            return (manufacturer) + " " + model;
+        }
+    }
+    //get App Country Region
+    public static String getAppCountryCode(Context context){
+        TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        String countryCodeValue = tm.getNetworkCountryIso();
+        return countryCodeValue.toUpperCase();
+    }
 }

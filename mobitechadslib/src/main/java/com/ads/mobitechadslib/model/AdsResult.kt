@@ -1,3 +1,10 @@
 package com.ads.mobitechadslib.model
 
-data class AdsResult(var data:List<Ads>)
+import com.google.gson.annotations.SerializedName
+
+data class AdsResult(var data:Ads,
+                     @SerializedName("fetch_status") val fetch_status : Fetch_status)
+
+data class Fetch_status (
+        @SerializedName("response") val response : Int
+)
