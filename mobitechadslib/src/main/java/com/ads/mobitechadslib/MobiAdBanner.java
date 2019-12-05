@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,11 +21,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-public class MobiAdBanner extends  android.support.v7.widget.AppCompatImageView
+public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
         implements View.OnClickListener {
     public MobiAdBanner(Context context) {
         super(context);

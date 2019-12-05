@@ -1,6 +1,6 @@
 package com.ads.mobitechadslib
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import com.ads.mobitechadslib.model.AdsResult
 import com.ads.mobitechadslib.model.AppUsage
 import retrofit2.Call
@@ -18,9 +18,9 @@ interface ApiService {
         fun create(): ApiService {
             val logging = HttpLoggingInterceptor()
             logging.level = HttpLoggingInterceptor.Level.BASIC
-            val client = OkHttpClient.Builder()
-                    .addInterceptor(LogJsonInterceptor())
-                    .build()
+//            val client = OkHttpClient.Builder()
+//                    .addInterceptor(LogJsonInterceptor())
+//                    .build()
             val retrofit = Retrofit.Builder()
                     .addCallAdapterFactory(
                             RxJava2CallAdapterFactory.create())

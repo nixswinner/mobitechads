@@ -2,7 +2,7 @@ package com.ads.mobitechads;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import com.ads.mobitechadslib.AdsModel;
 import com.ads.mobitechadslib.MobiAdBanner;
 import com.ads.mobitechadslib.MobitechAds;
