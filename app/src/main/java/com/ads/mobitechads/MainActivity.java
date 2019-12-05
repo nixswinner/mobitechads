@@ -3,16 +3,9 @@ package com.ads.mobitechads;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
 import com.ads.mobitechadslib.AdsModel;
 import com.ads.mobitechadslib.MobiAdBanner;
 import com.ads.mobitechadslib.MobitechAds;
-
-import java.util.Locale;
-
-import io.reactivex.disposables.CompositeDisposable;
-
 
 public class MainActivity extends AppCompatActivity {
     private AdsModel adsModel ;

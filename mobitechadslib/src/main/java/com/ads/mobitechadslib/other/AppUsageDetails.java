@@ -10,7 +10,9 @@ import com.ads.mobitechadslib.ApiService;
 import com.ads.mobitechadslib.model.AppUsage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,18 +48,20 @@ public class AppUsageDetails {
                 date,
                 getDeviceName(),
                 getAndroidRelease());
-
         ApiService.Companion.create()
                 .appUsage("application/json",appUsage)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()){
+                            Log.e("App Usage","Successfully");
                         }else {
+                            Log.e("App Usage","error "+response.message());
                         }
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("App Usage","failure "+t.getMessage());
                     }
                 });
     }
