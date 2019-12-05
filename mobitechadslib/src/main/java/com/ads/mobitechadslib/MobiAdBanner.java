@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.ads.mobitechadslib.model.Ads;
 import com.ads.mobitechadslib.model.AdsResult;
+import com.ads.mobitechadslib.other.AppUsageDetails;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
@@ -51,16 +52,19 @@ public class MobiAdBanner extends  android.support.v7.widget.AppCompatImageView
     }
 
     public void showAd(Context context,String banner_ad_url){
-        Glide.with(context)
-                .asBitmap()
-                .load(banner_ad_url)
-                .into(new BitmapImageViewTarget(this) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        super.setResource(resource);
-                    }
-                });
-        Log.e("Mobitech Banner Ad ","Loaded Successfully");
+       try {
+           Glide.with(context)
+                   .asBitmap()
+                   .load(banner_ad_url)
+                   .into(new BitmapImageViewTarget(this) {
+                       @Override
+                       protected void setResource(Bitmap resource) {
+                           super.setResource(resource);
+                       }
+                   });
+           Log.i("Mobitech Banner Ad ","Loaded Successfully");
+       }catch (Exception e){
+       }
     }
 
     @Override
@@ -92,6 +96,7 @@ public class MobiAdBanner extends  android.support.v7.widget.AppCompatImageView
                 handler.postDelayed(this, delay);
             }
         }, delay);
+        AppUsageDetails.getInstance(context,applicationId);
     }
     //no refresh rate
     public void getBannerAds(Context mcontext,String applicationId,String categoryId){
@@ -135,7 +140,7 @@ public class MobiAdBanner extends  android.support.v7.widget.AppCompatImageView
                     .create().getAds(categoryId,applicationId)
                     .execute().body();
             if (response.getData()!=null){
-                Log.e("Mobitech Banner ","available");
+                Log.i("Mobitech Banner ","available");
                 bannerAds = response.getData();
             }else {
                 Log.e("Mobitech Banner ","No ads available");

@@ -27,12 +27,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = MainActivity.this;
 
-
-        //....String country code
-        String country_code=Locale.getDefault().getCountry();
-
-        Log.e("The Country Code ","---"+country_code);
-
        // ....................Intertistial Ad ...............
        MobitechAds.getIntertistialAd(
                 MainActivity.this,
