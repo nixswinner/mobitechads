@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import androidx.annotation.Nullable;
+
+import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,7 +32,7 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
     }
     private Ads BannerAdsResult = null;
     private Ads adsBannerItem;
-    private Context context;
+    public Context context;
     public MobiAdBanner(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
@@ -103,12 +105,13 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
     //fetch banner ads
     private void fetchBannerAds(final String applicationId,
                                 final String categoryId){
+        final String countryCode = getAppCountryCode(context);
         new Thread()
         {
             @Override
             public void run() {
                 super.run();
-                BannerAdsResult=getTheBannerAds(applicationId,categoryId);
+                BannerAdsResult=getTheBannerAds(applicationId,categoryId,countryCode);
                 handler.sendEmptyMessage(0);
             }
         }.start();
@@ -129,12 +132,12 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
 
         }
     };
-    public static Ads getTheBannerAds(String applicationId,String categoryId){
+    public static Ads getTheBannerAds(String applicationId,String categoryId,String countryCode){
         Ads bannerAds=null;
         try {
 
             AdsResult response =ApiService.Companion
-                    .create().getAds(categoryId,applicationId)
+                    .create().getAds(categoryId,applicationId,countryCode)
                     .execute().body();
             if (response.getData()!=null){
                 Log.i("Mobitech Banner ","available");
@@ -146,6 +149,13 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
             e.printStackTrace();
         }
         return bannerAds;
+    }
+
+    //get country code
+    public static String getAppCountryCode(Context context){
+        TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        String countryCodeValue = tm.getNetworkCountryIso();
+        return countryCodeValue.toUpperCase();
     }
 
     @Override

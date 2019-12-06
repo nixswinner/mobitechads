@@ -32,9 +32,10 @@ interface ApiService {
         }
     }
     //get all the subjects
-    @GET("serve_ads/{category_id}/{app_id}")
+    @GET("serve_ads/{category_id}/{app_id}/{country_code}")
     fun getAds(@Path("category_id") categoryId:String,
-               @Path("app_id") app_id:String): Call<AdsResult>
+               @Path("app_id") app_id:String,
+               @Path("country_code")country_code:String): Call<AdsResult>
 
     //post app details
     @POST("app_usage/")

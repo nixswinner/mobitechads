@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +25,7 @@ public class MobitechAds {
                                          String categoryId) {
         //...........
         ApiService.Companion.create()
-                .getAds(categoryId,applicationId)
+                .getAds(categoryId,applicationId,getAppCountryCode(activity))
                 .enqueue(new Callback<AdsResult>() {
                     @Override
                     public void onResponse(Call<AdsResult> call,
@@ -85,6 +86,12 @@ public class MobitechAds {
             }
         });
         dialog.show();
+    }
+
+    public static String getAppCountryCode(Context context){
+        TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        String countryCodeValue = tm.getNetworkCountryIso();
+        return countryCodeValue.toUpperCase();
     }
     //banner ads .....
 
