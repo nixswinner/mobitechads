@@ -12,8 +12,15 @@ import android.widget.ImageView;
 
 import com.ads.mobitechadslib.model.Ads;
 import com.ads.mobitechadslib.model.AdsResult;
+import com.ads.mobitechadslib.model.UserLoc;
+import com.ads.mobitechadslib.other.AppLocationByIp;
 import com.ads.mobitechadslib.other.AppUsageDetails;
+import com.ads.mobitechadslib.util.SaveSharedPreference;
 import com.bumptech.glide.Glide;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -22,10 +29,57 @@ public class MobitechAds {
     private static Ads adsList = null;
     //show intertistial
     public static void getIntertistialAd(final Activity activity, final String applicationId,
-                                         String categoryId) {
+                                         final String categoryId) {
         //...........
+
+        String device_ip = new GetIpAddressUtil().getIPAddress(true);
+        if(SaveSharedPreference.getIpAddress(activity).equals(device_ip)){
+            showIntertistialAd(categoryId,applicationId,
+                    SaveSharedPreference.getCountryCode(activity),
+                    activity);
+            //Log.e("The Country Code  ","=== INSIDE Intertistial"+SaveSharedPreference.getCountryCode(activity));
+        }else {
+            AppLocationByIp.getInstance(activity).getAppLocViaIp()
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.io())
+                    .subscribe(new Observer<UserLoc>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
+
+                        @Override
+                        public void onNext(UserLoc userLoc) {
+                            SaveSharedPreference.setIpAddress(activity, userLoc.getIp());
+                            SaveSharedPreference.setCountryCode(activity, userLoc.getCountry_code());
+                            SaveSharedPreference.setCountryName(activity, userLoc.getCountry_name());
+                            SaveSharedPreference.setRegionName(activity, userLoc.getRegion_name());
+
+                            showIntertistialAd(categoryId,applicationId,
+                                    SaveSharedPreference.getCountryCode(activity),
+                                    activity);
+
+                           // Log.e("The Country Code  ","=== First time Intertistial"+SaveSharedPreference.getCountryCode(activity));
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e("Error ", "" + e.getMessage());
+                            //fetchBannerAds(applicationId,categoryId);
+                        }
+
+                        @Override
+                        public void onComplete() {
+                        }
+                    });
+        }
+    }
+    private static void showIntertistialAd(String categoryId,
+                                  final String applicationId,
+                                  String country_code,
+                                  final Activity activity){
         ApiService.Companion.create()
-                .getAds(categoryId,applicationId,getAppCountryCode(activity))
+                .getAds(categoryId,applicationId,
+                        country_code)
                 .enqueue(new Callback<AdsResult>() {
                     @Override
                     public void onResponse(Call<AdsResult> call,
@@ -37,7 +91,7 @@ public class MobitechAds {
 
                             AppUsageDetails.getInstance(activity,applicationId);
 
-                         }else {
+                        }else {
                             Log.e("Mobitech Intertistial","Ad Failed to Load ");
                         }
                     }

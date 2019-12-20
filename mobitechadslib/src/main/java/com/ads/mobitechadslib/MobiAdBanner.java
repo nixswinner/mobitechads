@@ -18,11 +18,23 @@ import android.view.View;
 
 import com.ads.mobitechadslib.model.Ads;
 import com.ads.mobitechadslib.model.AdsResult;
+import com.ads.mobitechadslib.model.UserLoc;
+import com.ads.mobitechadslib.other.AppLocationByIp;
 import com.ads.mobitechadslib.other.AppUsageDetails;
+import com.ads.mobitechadslib.other.Const;
+import com.ads.mobitechadslib.util.SaveSharedPreference;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.io.IOException;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
         implements View.OnClickListener {
@@ -33,6 +45,8 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
     private Ads BannerAdsResult = null;
     private Ads adsBannerItem;
     public Context context;
+    String countryCode = "";
+    public static UserLoc userLoc=null;
     public MobiAdBanner(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
@@ -105,16 +119,58 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
     //fetch banner ads
     private void fetchBannerAds(final String applicationId,
                                 final String categoryId){
-        final String countryCode = getAppCountryCode(context);
-        new Thread()
-        {
-            @Override
-            public void run() {
-                super.run();
-                BannerAdsResult=getTheBannerAds(applicationId,categoryId,countryCode);
-                handler.sendEmptyMessage(0);
-            }
-        }.start();
+
+        String device_ip = new GetIpAddressUtil().getIPAddress(true);
+        if(SaveSharedPreference.getIpAddress(context).equals(device_ip)){
+            new Thread()
+            {
+                @Override
+                public void run() {
+                    super.run();
+                    BannerAdsResult=getTheBannerAds(applicationId,categoryId,
+                            SaveSharedPreference.getCountryCode(context));
+                    handler.sendEmptyMessage(0);
+                }
+            }.start();
+            //Log.e("The Country Code  ","=== INSIDE"+SaveSharedPreference.getCountryCode(context));
+        }else {
+            AppLocationByIp.getInstance(context).getAppLocViaIp()
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.io())
+                    .subscribe(new Observer<UserLoc>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
+                        @Override
+                        public void onNext(UserLoc userLoc) {
+                            SaveSharedPreference.setIpAddress(context,userLoc.getIp());
+                            SaveSharedPreference.setCountryCode(context,userLoc.getCountry_code());
+                            SaveSharedPreference.setCountryName(context,userLoc.getCountry_name());
+                            SaveSharedPreference.setRegionName(context,userLoc.getRegion_name());
+                            new Thread()
+                            {
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    BannerAdsResult=getTheBannerAds(applicationId,categoryId,
+                                            SaveSharedPreference.getCountryCode(context));
+                                    handler.sendEmptyMessage(0);
+                                }
+                            }.start();
+
+                            //Log.e("The Country Code  ","=== First time"+SaveSharedPreference.getCountryCode(context));
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e("Error ",""+e.getMessage());
+                            //fetchBannerAds(applicationId,categoryId);
+                        }
+                        @Override
+                        public void onComplete() {
+                        }
+                    });
+
+        }
     }
     Handler handler = new Handler(Looper.myLooper())
     {
@@ -132,6 +188,10 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
 
         }
     };
+
+    private void getAppLocDetails(){
+
+    }
     public static Ads getTheBannerAds(String applicationId,String categoryId,String countryCode){
         Ads bannerAds=null;
         try {
@@ -149,6 +209,27 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
             e.printStackTrace();
         }
         return bannerAds;
+    }
+
+    public static void getUserLocationInfo(){
+        ApiService.ApiServiceIpAdress.Companion
+                .create().getUserLocationUsingIp(new GetIpAddressUtil().getIPAddress(true),
+                new Const().ip_stack_api_key)
+                .enqueue(new Callback<UserLoc>() {
+                    @Override
+                    public void onResponse(Call<UserLoc> call, Response<UserLoc> response) {
+                        if (response.isSuccessful()){
+                              userLoc= response.body();
+                        }else{
+                            Log.e("Location Response Error",",,,,"+response.message());
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<UserLoc> call, Throwable t) {
+                        Log.e("Response failure",",,,,"+t.getMessage());
+
+                    }
+                });
     }
 
     //get country code
