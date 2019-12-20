@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.ads.mobitechadslib.ApiService;
 import com.ads.mobitechadslib.model.AppUsage;
+import com.ads.mobitechadslib.util.SaveSharedPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class AppUsageDetails {
         AppUsage appUsage = new AppUsage(
                 application_id,
                 getApplicationName(),
-                getAppCountryCode(),
+                SaveSharedPreference.getCountryCode(context),
                 date,
                 getDeviceName(),
                 getAndroidRelease());

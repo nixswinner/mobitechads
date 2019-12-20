@@ -48,7 +48,7 @@ public class SaveSharedPreference {
     }
 
     public static String getCountryCode(Context ctx) {
-        return getSharedPreferences(ctx).getString(PREF_COUNTRY_CODE, "");
+        return getSharedPreferences(ctx).getString(PREF_COUNTRY_CODE, "KE");
     }
     public static String getCountryName(Context ctx) {
         return getSharedPreferences(ctx).getString(PREF_COUNTRY_NAME, "");
