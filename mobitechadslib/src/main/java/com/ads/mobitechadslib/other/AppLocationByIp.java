@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.ads.mobitechadslib.ApiService;
 import com.ads.mobitechadslib.GetIpAddressUtil;
+import com.ads.mobitechadslib.model.PublicIP;
 import com.ads.mobitechadslib.model.UserLoc;
 import com.ads.mobitechadslib.util.SaveSharedPreference;
 
@@ -60,11 +61,15 @@ public class AppLocationByIp {
                 });
     }
 
-    public static Observable<UserLoc> getAppLocViaIp(){
+    public static Observable<UserLoc> getAppLocViaIp(String device_ip){
         return ApiService.ApiServiceIpAdress.Companion.create()
-                .getUserLocByIp(new GetIpAddressUtil().getIPAddress(true),
+                .getUserLocByIp(device_ip,
                         new Const().ip_stack_api_key);
     }
+    /*public static Observable<PublicIP>getMyPublicIPAddress(){
+        return ApiService.ApiServicePublicIPAddress.Companion.create()
+                .getMyPublicIPAddress("json");
+    }*/
 
     public static UserLoc getAppLocation(){
         return userLoc;

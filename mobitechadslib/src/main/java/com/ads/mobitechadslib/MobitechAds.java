@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.ads.mobitechadslib.model.Ads;
 import com.ads.mobitechadslib.model.AdsResult;
+import com.ads.mobitechadslib.model.PublicIP;
 import com.ads.mobitechadslib.model.UserLoc;
 import com.ads.mobitechadslib.other.AppLocationByIp;
 import com.ads.mobitechadslib.other.AppUsageDetails;
@@ -23,6 +24,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MobitechAds {
     static AdsModel adsModel = new AdsModel();
@@ -32,47 +34,62 @@ public class MobitechAds {
                                          final String categoryId) {
         //...........
 
-        String device_ip = new GetIpAddressUtil().getIPAddress(true);
+        //String device_ip = new GetIpAddressUtil().getIPAddress(true);
+        ApiService.ApiServicePublicIPAddress.Companion.create()
+                .getMyPublicIPAddress("json")
+                .enqueue(new Callback<PublicIP>() {
+                    @Override
+                    public void onResponse(Call<PublicIP> call, Response<PublicIP> response) {
+                        if (response.isSuccessful()){
+                            getAdsForARegion(activity,applicationId,categoryId,response.body().getIp());
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<PublicIP> call, Throwable t) {
+                        Log.e("Mobitech Ads Error",
+                                "You do not have an active Internet connection");
+                    }
+                });
+    }
+
+    private static void getAdsForARegion(
+            final Activity activity,
+            final String applicationId,
+            final String categoryId, final String device_ip) {
+
         if(SaveSharedPreference.getIpAddress(activity).equals(device_ip)){
             showIntertistialAd(categoryId,applicationId,
                     SaveSharedPreference.getCountryCode(activity),
                     activity);
-            //Log.e("The Country Code  ","=== INSIDE Intertistial"+SaveSharedPreference.getCountryCode(activity));
         }else {
-            AppLocationByIp.getInstance(activity).getAppLocViaIp()
+            AppLocationByIp.getInstance(activity).getAppLocViaIp(device_ip)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(Schedulers.io())
                     .subscribe(new Observer<UserLoc>() {
                         @Override
                         public void onSubscribe(Disposable d) {
                         }
-
                         @Override
                         public void onNext(UserLoc userLoc) {
                             SaveSharedPreference.setIpAddress(activity, userLoc.getIp());
                             SaveSharedPreference.setCountryCode(activity, userLoc.getCountry_code());
                             SaveSharedPreference.setCountryName(activity, userLoc.getCountry_name());
                             SaveSharedPreference.setRegionName(activity, userLoc.getRegion_name());
-
                             showIntertistialAd(categoryId,applicationId,
                                     SaveSharedPreference.getCountryCode(activity),
                                     activity);
-
-                           // Log.e("The Country Code  ","=== First time Intertistial"+SaveSharedPreference.getCountryCode(activity));
                         }
-
                         @Override
                         public void onError(Throwable e) {
                             Log.e("Error ", "" + e.getMessage());
-                            //fetchBannerAds(applicationId,categoryId);
                         }
-
                         @Override
                         public void onComplete() {
                         }
                     });
         }
     }
+
     private static void showIntertistialAd(String categoryId,
                                   final String applicationId,
                                   String country_code,

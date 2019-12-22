@@ -3,6 +3,7 @@ package com.ads.mobitechadslib
 import androidx.lifecycle.LiveData
 import com.ads.mobitechadslib.model.AdsResult
 import com.ads.mobitechadslib.model.AppUsage
+import com.ads.mobitechadslib.model.PublicIP
 import com.ads.mobitechadslib.model.UserLoc
 import io.reactivex.Observable
 import retrofit2.Call
@@ -53,6 +54,28 @@ interface ApiService {
             }
         }
     }
+
+    interface ApiServicePublicIPAddress {
+        companion object {
+            fun create(): com.ads.mobitechadslib.ApiService {
+                val logging = HttpLoggingInterceptor()
+                logging.level = HttpLoggingInterceptor.Level.BASIC
+//            val client = OkHttpClient.Builder()
+//                    .addInterceptor(LogJsonInterceptor())
+//                    .build()
+                val retrofit = Retrofit.Builder()
+                        .addCallAdapterFactory(
+                                RxJava2CallAdapterFactory.create())
+                        .addConverterFactory(
+                                GsonConverterFactory.create())
+                        .baseUrl("https://api.ipify.org")
+                        .build()
+                return retrofit.create(com.ads.mobitechadslib.ApiService::class.java)
+            }
+        }
+    }
+
+    //get public ip https://api.ipify.org?format=json
     //get all the subjects
     @GET("serve_ads/{category_id}/{app_id}/{country_code}")
     fun getAds(@Path("category_id") categoryId:String,
@@ -75,6 +98,9 @@ interface ApiService {
     @GET("/{ip_adress}")
     fun getUserLocByIp(@Path("ip_adress") IPAddress:String,
                                @Query("access_key")access_key:String):Observable<UserLoc>
+
+    @GET("/")
+    fun getMyPublicIPAddress(@Query("format")format:String):Call<PublicIP>
 
 
 

@@ -18,6 +18,7 @@ import android.view.View;
 
 import com.ads.mobitechadslib.model.Ads;
 import com.ads.mobitechadslib.model.AdsResult;
+import com.ads.mobitechadslib.model.PublicIP;
 import com.ads.mobitechadslib.model.UserLoc;
 import com.ads.mobitechadslib.other.AppLocationByIp;
 import com.ads.mobitechadslib.other.AppUsageDetails;
@@ -120,7 +121,30 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
     private void fetchBannerAds(final String applicationId,
                                 final String categoryId){
 
-        String device_ip = new GetIpAddressUtil().getIPAddress(true);
+        //String device_ip = new GetIpAddressUtil().getIPAddress(true);
+        //Log.e("MY IP ",""+new GetIpAddressUtil().getMyIpAddress(context));
+
+        ApiService.ApiServicePublicIPAddress.Companion.create()
+                .getMyPublicIPAddress("json")
+                .enqueue(new Callback<PublicIP>() {
+                    @Override
+                    public void onResponse(Call<PublicIP> call, Response<PublicIP> response) {
+                        if (response.isSuccessful()){
+                            getAdsForARegion(applicationId,categoryId,response.body().getIp());
+                            Log.e("Public IP","==="+response.body().getIp());
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<PublicIP> call, Throwable t) {
+                        Log.e("Mobitech Ads Error",
+                                "You do not have an active Internet connection");
+                    }
+                });
+
+    }
+    private void getAdsForARegion(final String applicationId,
+                                  final String categoryId,
+                                  String device_ip){
         if(SaveSharedPreference.getIpAddress(context).equals(device_ip)){
             new Thread()
             {
@@ -132,9 +156,8 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
                     handler.sendEmptyMessage(0);
                 }
             }.start();
-            //Log.e("The Country Code  ","=== INSIDE"+SaveSharedPreference.getCountryCode(context));
         }else {
-            AppLocationByIp.getInstance(context).getAppLocViaIp()
+            AppLocationByIp.getInstance(context).getAppLocViaIp(device_ip)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(Schedulers.io())
                     .subscribe(new Observer<UserLoc>() {
@@ -157,8 +180,6 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
                                     handler.sendEmptyMessage(0);
                                 }
                             }.start();
-
-                            //Log.e("The Country Code  ","=== First time"+SaveSharedPreference.getCountryCode(context));
                         }
                         @Override
                         public void onError(Throwable e) {
@@ -169,7 +190,6 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
                         public void onComplete() {
                         }
                     });
-
         }
     }
     Handler handler = new Handler(Looper.myLooper())
@@ -188,10 +208,6 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
 
         }
     };
-
-    private void getAppLocDetails(){
-
-    }
     public static Ads getTheBannerAds(String applicationId,String categoryId,String countryCode){
         Ads bannerAds=null;
         try {
@@ -210,7 +226,6 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
         }
         return bannerAds;
     }
-
     public static void getUserLocationInfo(){
         ApiService.ApiServiceIpAdress.Companion
                 .create().getUserLocationUsingIp(new GetIpAddressUtil().getIPAddress(true),
@@ -231,20 +246,22 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
                     }
                 });
     }
-
     //get country code
     public static String getAppCountryCode(Context context){
         TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         String countryCodeValue = tm.getNetworkCountryIso();
         return countryCodeValue.toUpperCase();
     }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(adsBannerItem.getAd_urlandroid()!=null){
-            viewBannerAd(adsBannerItem.getAd_urlandroid());
-        }else {
-            Log.e("Mobitech Banner ","On Click No ad redirect url");
+        try {
+            if(adsBannerItem.getAd_urlandroid()!=null){
+                viewBannerAd(adsBannerItem.getAd_urlandroid());
+            }else {
+                Log.e("Mobitech Banner ","On Click No ad redirect url");
+            }
+        }catch (Exception e){
+            Log.e("Mobitech Banner ","Not loaded yet");
         }
         return super.onTouchEvent(event);
     }
