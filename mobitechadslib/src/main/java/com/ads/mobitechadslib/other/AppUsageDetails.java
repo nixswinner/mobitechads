@@ -42,27 +42,28 @@ public class AppUsageDetails {
 
     public static void saveDetails(){
         String date = dateformatter.format(Calendar.getInstance().getTime());
-        AppUsage appUsage = new AppUsage(
-                application_id,
-                getApplicationName(),
-                SaveSharedPreference.getCountryCode(context),
-                date,
-                getDeviceName(),
-                getAndroidRelease());
         ApiService.Companion.create()
-                .appUsage("application/json",appUsage)
+                .appUsage("application/json",
+                        "application/json",
+                        new AppUsage(
+                                application_id,
+                                getApplicationName(),
+                                SaveSharedPreference.getCountryCode(context),
+                                date,
+                                getDeviceName(),
+                                getAndroidRelease()))
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()){
-                            Log.e("App Usage","Successfully");
+                            //Log.e("App Usage","Successfully "+response.body());
                         }else {
-                            Log.e("App Usage","error "+response.message());
+                            //Log.e("App Usage","error "+response.message());
                         }
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("App Usage","failure "+t.getMessage());
+                        //Log.e("App Usage","failure "+t.getMessage());
                     }
                 });
     }

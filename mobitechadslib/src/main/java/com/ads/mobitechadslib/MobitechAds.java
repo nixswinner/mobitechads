@@ -29,6 +29,8 @@ import retrofit2.Response;
 public class MobitechAds {
     static AdsModel adsModel = new AdsModel();
     private static Ads adsList = null;
+    private static Dialog intertistial=null;
+    static boolean adLoaded=false;
     //show intertistial
     public static void getIntertistialAd(final Activity activity, final String applicationId,
                                          final String categoryId) {
@@ -104,9 +106,10 @@ public class MobitechAds {
                         if (response.isSuccessful()){
                             Log.i("Mobitech Intertistial","Ad Loaded successfully ");
                             adsList=response.body().getData();
-                            populateAdsList(response.body().getData(),activity);
-
-                            AppUsageDetails.getInstance(activity,applicationId);
+                            if (response.body().getData() !=null){
+                                populateAdsList(response.body().getData(),activity);
+                                AppUsageDetails.getInstance(activity,applicationId);
+                            }
 
                         }else {
                             Log.e("Mobitech Intertistial","Ad Failed to Load ");
@@ -118,15 +121,12 @@ public class MobitechAds {
                     }
                 });
     }
-    private static void populateAdsList(Ads adList,Activity activity){
-        if (adList!=null){
-            //show intertistial
-            showIntertistial(activity, adList.getInterstitial_upload(),
+    private static Dialog populateAdsList(Ads adList,Activity activity){
+            return showIntertistial(activity, adList.getInterstitial_upload(),
                     adList.getInterstitial_urlandroid());
-        }
     }
     // show intertistial ad
-    public static void showIntertistial(final Activity activity, String ad_imageUrl,
+    public static Dialog showIntertistial(final Activity activity, String ad_imageUrl,
                                         final String click_url_redirect){
         final Dialog dialog = new Dialog(activity,
                 android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -157,6 +157,8 @@ public class MobitechAds {
             }
         });
         dialog.show();
+        adLoaded=true;
+        return dialog;
     }
 
     public static String getAppCountryCode(Context context){
@@ -164,6 +166,20 @@ public class MobitechAds {
         String countryCodeValue = tm.getNetworkCountryIso();
         return countryCodeValue.toUpperCase();
     }
+
+    /*public  boolean setAdsStatus(boolean isloaded){
+        return isloaded;
+    }
+
+    public Dialog showIntertistialAd(){
+        if (adLoaded!=true){
+
+        }else {
+
+        }
+    }*/
     //banner ads .....
+
+
 
 }

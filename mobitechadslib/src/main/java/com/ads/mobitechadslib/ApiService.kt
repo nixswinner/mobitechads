@@ -21,15 +21,15 @@ interface ApiService {
         fun create(): ApiService {
             val logging = HttpLoggingInterceptor()
             logging.level = HttpLoggingInterceptor.Level.BASIC
-//            val client = OkHttpClient.Builder()
-//                    .addInterceptor(LogJsonInterceptor())
-//                    .build()
+          /* val client = OkHttpClient.Builder()
+                    .addInterceptor(LogJsonInterceptor())
+                    .build()*/
             val retrofit = Retrofit.Builder()
                     .addCallAdapterFactory(
                             RxJava2CallAdapterFactory.create())
                     .addConverterFactory(
                             GsonConverterFactory.create())
-                    .baseUrl("http://ads.mobitechads.com/api/")
+                    .baseUrl("https://ads.mobitechads.com/api/")
                     .build()
             return retrofit.create(ApiService::class.java)
         }
@@ -85,6 +85,7 @@ interface ApiService {
     //post app details
     @POST("app_usage/")
     fun appUsage(@Header("Content-Type") type:String,
+                 @Header("Accept") accept:String,
                  @Body usage: AppUsage):Call<Void>
 
     @GET("serve_ads/{category_id}")

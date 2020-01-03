@@ -105,7 +105,7 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
         final int delay = (refreshRate*60000); //milliseconds
         handler.postDelayed(new Runnable(){
             public void run(){
-                Log.e("Mobitech Banner ","Refreshing Banner ...");
+                Log.i("Mobitech Banner ","Refreshing Banner ...");
                 fetchBannerAds(applicationId,categoryId);
                 handler.postDelayed(this, delay);
             }
@@ -131,7 +131,7 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
                     public void onResponse(Call<PublicIP> call, Response<PublicIP> response) {
                         if (response.isSuccessful()){
                             getAdsForARegion(applicationId,categoryId,response.body().getIp());
-                            Log.e("Public IP","==="+response.body().getIp());
+                            //Log.e("Public IP","==="+response.body().getIp());
                         }
                     }
                     @Override
@@ -258,7 +258,7 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
             if(adsBannerItem.getAd_urlandroid()!=null){
                 viewBannerAd(adsBannerItem.getAd_urlandroid());
             }else {
-                Log.e("Mobitech Banner ","On Click No ad redirect url");
+                Log.i("Mobitech Banner ","On Click No ad redirect url");
             }
         }catch (Exception e){
             Log.e("Mobitech Banner ","Not loaded yet");
