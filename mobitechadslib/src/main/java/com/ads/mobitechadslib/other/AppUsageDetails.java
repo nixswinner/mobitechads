@@ -23,6 +23,7 @@ public class AppUsageDetails {
     private static AppUsageDetails appUsageDetails;
     private static Context context;
     private static String application_id;
+    private static String country_code;
     static SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private AppUsageDetails(){
         //Prevent form the reflection api.
@@ -30,11 +31,12 @@ public class AppUsageDetails {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
     }
-    public synchronized static AppUsageDetails getInstance(Context ctx,String app_id){
+    public synchronized static AppUsageDetails getInstance(Context ctx,String app_id,String countryCode){
         if (appUsageDetails == null){ //if there is no instance available... create new one
             appUsageDetails = new AppUsageDetails();
             context = ctx;
             application_id = app_id;
+            country_code = countryCode;
             saveDetails();
         }
         return appUsageDetails;
@@ -48,7 +50,7 @@ public class AppUsageDetails {
                         new AppUsage(
                                 application_id,
                                 getApplicationName(),
-                                SaveSharedPreference.getCountryCode(context),
+                                country_code,
                                 date,
                                 getDeviceName(),
                                 getAndroidRelease()))

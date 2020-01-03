@@ -93,9 +93,9 @@ public class MobitechAds {
     }
 
     private static void showIntertistialAd(String categoryId,
-                                  final String applicationId,
-                                  String country_code,
-                                  final Activity activity){
+                                           final String applicationId,
+                                           final String country_code,
+                                           final Activity activity){
         ApiService.Companion.create()
                 .getAds(categoryId,applicationId,
                         country_code)
@@ -108,7 +108,7 @@ public class MobitechAds {
                             adsList=response.body().getData();
                             if (response.body().getData() !=null){
                                 populateAdsList(response.body().getData(),activity);
-                                AppUsageDetails.getInstance(activity,applicationId);
+                                AppUsageDetails.getInstance(activity,applicationId,country_code);
                             }
 
                         }else {

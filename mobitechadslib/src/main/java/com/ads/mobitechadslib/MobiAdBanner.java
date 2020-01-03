@@ -110,7 +110,7 @@ public class MobiAdBanner extends  androidx.appcompat.widget.AppCompatImageView
                 handler.postDelayed(this, delay);
             }
         }, delay);
-        AppUsageDetails.getInstance(context,applicationId);
+        AppUsageDetails.getInstance(context,applicationId,countryCode);
     }
     //no refresh rate
     public void getBannerAds(Context mcontext,String applicationId,String categoryId){
