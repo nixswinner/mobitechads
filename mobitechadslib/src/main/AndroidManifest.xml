@@ -3,8 +3,10 @@
     package="com.ads.mobitechadslib">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <application
+    <application>
+<!--
         android:networkSecurityConfig="@xml/network_policy_exception">
+-->
     </application>
 
 </manifest>
