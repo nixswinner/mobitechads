@@ -48,7 +48,7 @@ interface ApiService {
                                 RxJava2CallAdapterFactory.create())
                         .addConverterFactory(
                                 GsonConverterFactory.create())
-                        .baseUrl("http://api.ipstack.com")
+                        .baseUrl("https://api.ipstack.com")
                         .build()
                 return retrofit.create(com.ads.mobitechadslib.ApiService::class.java)
             }
