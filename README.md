@@ -10,7 +10,7 @@ Implements the mobitech ads
 # Setup.
 1.Add gradle dependency on build.gradle (app).
 ```
-  implementation 'com.github.nixswinner:mobitechads:1.0.9'
+  implementation 'com.github.nixswinner:mobitechads:1.1.4'
 ```
 2.Add on build.gradle project under all allprojects repositories.
 ```
