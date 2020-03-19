@@ -9,6 +9,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
 import com.ads.mobitechadslib.model.Ads;
 import com.ads.mobitechadslib.model.AdsResult;
@@ -121,9 +122,17 @@ public class MobitechAds {
                     }
                 });
     }
-    private static Dialog populateAdsList(Ads adList,Activity activity){
-            return showIntertistial(activity, adList.getInterstitial_upload(),
+    private static  void populateAdsList(Ads adList,Activity activity){
+        if(adList.getVideo()!=null){
+
+        }
+        if(adList.getInterstitial_upload()!=null){
+            showIntertistial(activity, adList.getInterstitial_upload(),
                     adList.getInterstitial_urlandroid());
+        }
+        showVideoAd(activity, adList.getInterstitial_upload(),
+                adList.getInterstitial_urlandroid());
+
     }
     // show intertistial ad
     public static Dialog showIntertistial(final Activity activity, String ad_imageUrl,
@@ -160,6 +169,42 @@ public class MobitechAds {
         adLoaded=true;
         return dialog;
     }
+    public static Dialog showVideoAd(final Activity activity, String ad_imageUrl,
+                                          final String click_url_redirect){
+        final Dialog dialog = new Dialog(activity,
+                android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setContentView(R.layout.video_ad_display);
+        dialog.setCancelable(true);
+        VideoView videoView = dialog.findViewById(R.id.videoView);
+        ImageView imgCancle = dialog.findViewById(R.id.cancle);
+        //display video
+        videoView.setVideoPath("http://techslides.com/demos/sample-videos/small.mp4");
+        videoView.start();
+        videoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //on click open browser
+                if (click_url_redirect!=null){
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(click_url_redirect));
+                    activity.startActivity(i);
+                }else {
+                    Log.e("Mobitech Video ","Ad Error Null Exception on Ad Url ");
+                }
+            }
+        });
+        imgCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+        adLoaded=true;
+        return dialog;
+
+    }
+
 
     public static String getAppCountryCode(Context context){
         TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
