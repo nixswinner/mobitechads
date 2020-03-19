@@ -11,19 +11,11 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-
 
 
 interface ApiService {
     companion object {
         fun create(): ApiService {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BASIC
-          /* val client = OkHttpClient.Builder()
-                    .addInterceptor(LogJsonInterceptor())
-                    .build()*/
             val retrofit = Retrofit.Builder()
                     .addCallAdapterFactory(
                             RxJava2CallAdapterFactory.create())
@@ -38,8 +30,6 @@ interface ApiService {
     interface ApiServiceIpAdress {
         companion object {
             fun create(): com.ads.mobitechadslib.ApiService {
-                val logging = HttpLoggingInterceptor()
-                logging.level = HttpLoggingInterceptor.Level.BASIC
 //            val client = OkHttpClient.Builder()
 //                    .addInterceptor(LogJsonInterceptor())
 //                    .build()
@@ -58,8 +48,6 @@ interface ApiService {
     interface ApiServicePublicIPAddress {
         companion object {
             fun create(): com.ads.mobitechadslib.ApiService {
-                val logging = HttpLoggingInterceptor()
-                logging.level = HttpLoggingInterceptor.Level.BASIC
 //            val client = OkHttpClient.Builder()
 //                    .addInterceptor(LogJsonInterceptor())
 //                    .build()

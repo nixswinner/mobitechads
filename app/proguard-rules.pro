@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn okhttp3.internal.platform.*
+-dontwarn com.github.nixswinner.**
+#keep the models
+-keep class com.ads.mobitechadslib.model.** { <fields>; }
+-keep class retrofit2.** { *; }
+-keep class com.google.gson.** { *; }
