@@ -10,7 +10,7 @@ Implements the mobitech ads
 # Setup.
 1.Add gradle dependency on build.gradle (app).
 ```
-  implementation 'com.github.nixswinner:mobitechads:1.1.4'
+  implementation 'com.github.nixswinner:mobitechads:1.1.7'
 ```
 2.Add on build.gradle project under all allprojects repositories.
 ```
@@ -61,5 +61,12 @@ allprojects {
   It takes 3 parameters - context and ads category_id - string and your developer app id {get one at https://ads.mobitechads.com } - signup and create your app
   ```
    MobitechAds.getIntertistialAd(MainActivity.this,"applicationId","1");
+  ```
+   # Add Video ad.
+  
+  Add the following code snippet on the activity logic
+  It takes 3 parameters - context and ads category_id - string and your developer app id {get one at https://ads.mobitechads.com } - signup and create your app
+  ```
+   MobitechAds.loadVideoAd(MainActivity.this,"applicationId","1");
   ```
   
