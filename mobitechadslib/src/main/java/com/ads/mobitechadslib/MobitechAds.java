@@ -4,11 +4,17 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.ads.mobitechadslib.model.Ads;
@@ -192,7 +198,7 @@ public class MobitechAds {
             final String categoryId, final String device_ip) {
 
         if(SaveSharedPreference.getIpAddress(activity).equals(device_ip)){
-            showIntertistialAd(categoryId,applicationId,
+            showVideoAd(categoryId,applicationId,
                     SaveSharedPreference.getCountryCode(activity),
                     activity);
         }else {
@@ -209,7 +215,7 @@ public class MobitechAds {
                             SaveSharedPreference.setCountryCode(activity, userLoc.getCountry_code());
                             SaveSharedPreference.setCountryName(activity, userLoc.getCountry_name());
                             SaveSharedPreference.setRegionName(activity, userLoc.getRegion_name());
-                            showIntertistialAd(categoryId,applicationId,
+                            showVideoAd(categoryId,applicationId,
                                     SaveSharedPreference.getCountryCode(activity),
                                     activity);
                         }
@@ -258,21 +264,52 @@ public class MobitechAds {
         if(adList.getVideo()!=null){
             showVideoAd(activity, adList.getVideo(),
                     adList.getInterstitial_urlandroid());
+        }else {
+            Log.i("Mobitech Video Ad","No video ad available at the moment");
         }
     }
 
     //-------end video ad.--------
-    public static Dialog showVideoAd(final Activity activity, String ad_imageUrl,
+    public static Dialog showVideoAd(final Activity activity, String ad_video_link,
                                           final String click_url_redirect){
         final Dialog dialog = new Dialog(activity,
                 android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.setContentView(R.layout.video_ad_display);
         dialog.setCancelable(true);
         VideoView videoView = dialog.findViewById(R.id.videoView);
+        final Button btn_more = dialog.findViewById(R.id.btn_more);
+
+        Animation anim_blink =  AnimationUtils.loadAnimation(activity,
+                R.anim.blink);
+        btn_more.startAnimation(anim_blink);
+
+        final LinearLayout vidAdLoading = dialog.findViewById(R.id.vidAdLoading);
         ImageView imgCancle = dialog.findViewById(R.id.cancle);
         //display video
-        videoView.setVideoPath("http://techslides.com/demos/sample-videos/small.mp4");
+        videoView.setVideoPath(ad_video_link);
         videoView.start();
+        //play complete
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                btn_more.setVisibility(View.VISIBLE);
+            }
+        });
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                vidAdLoading.setVisibility(View.GONE);
+            }
+        });
+        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                dialog.dismiss();
+                Toast.makeText(activity,"Mobitech Video Ad failed to load",Toast.LENGTH_SHORT).show();
+                Log.e("Mobitech Video Ad","Failed to Load");
+                return false;
+            }
+        });
         videoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
