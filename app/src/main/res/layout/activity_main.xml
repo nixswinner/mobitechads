@@ -7,23 +7,64 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:text="Banner Ad will load below"
+        android:text="Mobitech Ads"
+        android:gravity="center"
+        android:padding="15dp"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnIntertistialAd"
+            android:layout_width="match_parent"
+            android:text="Load Intertistial Ad"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_rounded_app"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnBannnerAd"
+            android:layout_width="match_parent"
+            android:text="Load Banner Ad"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_rounded_app"
+            android:textColor="@android:color/white"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnVideoAd"
+            android:layout_width="match_parent"
+            android:text="Load Video Ad"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_rounded_app"
+            android:textColor="@android:color/white"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
   <com.ads.mobitechadslib.MobiAdBanner
       android:id="@+id/bannerAd"
       android:layout_gravity="center"
       android:scaleType="fitXY"
+      android:visibility="gone"
+      android:layout_marginTop="40dp"
       android:layout_width="320dp"
-      android:layout_height="50dp"
+      android:layout_height="55dp"
       android:padding="6dp" />
 
 
