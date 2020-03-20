@@ -68,7 +68,7 @@
         android:layout_width="120dp"
         android:layout_height="40dp"
         android:background="@drawable/btn_rounded"
-        android:text="More"
+        android:text="Visit Now >"
         android:textColor="#fff"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
