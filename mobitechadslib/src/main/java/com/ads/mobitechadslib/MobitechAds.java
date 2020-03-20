@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -25,6 +27,8 @@ import com.ads.mobitechadslib.other.AppLocationByIp;
 import com.ads.mobitechadslib.other.AppUsageDetails;
 import com.ads.mobitechadslib.util.SaveSharedPreference;
 import com.bumptech.glide.Glide;
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -38,6 +42,8 @@ public class MobitechAds {
     private static Ads adsList = null;
     private static Dialog intertistial=null;
     static boolean adLoaded=false;
+    static Long videoDuration=0L;
+    static Long currentTime=0L;
     //show intertistial
     public static void getIntertistialAd(final Activity activity, final String applicationId,
                                          final String categoryId) {
@@ -272,33 +278,67 @@ public class MobitechAds {
     //-------end video ad.--------
     public static Dialog showVideoAd(final Activity activity, String ad_video_link,
                                           final String click_url_redirect){
+        final Handler mHandler = new Handler();
+
         final Dialog dialog = new Dialog(activity,
                 android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.setContentView(R.layout.video_ad_display);
         dialog.setCancelable(true);
-        VideoView videoView = dialog.findViewById(R.id.videoView);
+        final VideoView videoView = dialog.findViewById(R.id.videoView);
         final Button btn_more = dialog.findViewById(R.id.btn_more);
+        final TextView txt_skip = dialog.findViewById(R.id.txt_skip);
 
         Animation anim_blink =  AnimationUtils.loadAnimation(activity,
                 R.anim.blink);
         btn_more.startAnimation(anim_blink);
 
         final LinearLayout vidAdLoading = dialog.findViewById(R.id.vidAdLoading);
-        ImageView imgCancle = dialog.findViewById(R.id.cancle);
+        final ImageView imgCancle = dialog.findViewById(R.id.cancle);
         //display video
         videoView.setVideoPath(ad_video_link);
         videoView.start();
+
+        final Runnable updateVideoPlayProgress = new Runnable() {
+            @Override
+            public void run() {
+                currentTime = videoDuration-videoView.getCurrentPosition();
+                if(videoDuration>0){
+                    txt_skip.setText(
+                            String.format(
+                                    "Skip in %d sec",
+                                    TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
+                            )
+                    );
+                }
+                if (videoDuration==currentTime){
+                    mHandler.removeCallbacks(this);
+                }else{
+                    //
+                }
+                Log.e("Vid","Runnable running");
+                mHandler.postDelayed(this, 1000);
+            }
+
+        };
+
         //play complete
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 btn_more.setVisibility(View.VISIBLE);
+                imgCancle.setVisibility(View.VISIBLE);
+                txt_skip.setVisibility(View.GONE);
+                //remove callbacks
+                mHandler.removeCallbacks(updateVideoPlayProgress);
             }
         });
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 vidAdLoading.setVisibility(View.GONE);
+                videoDuration=Long.parseLong(String.valueOf(videoView.getDuration()));
+                updateVideoPlayProgress.run();
             }
         });
         videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -310,7 +350,7 @@ public class MobitechAds {
                 return false;
             }
         });
-        videoView.setOnClickListener(new View.OnClickListener() {
+        btn_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //on click open browser
@@ -321,6 +361,7 @@ public class MobitechAds {
                 }else {
                     Log.e("Mobitech Video ","Ad Error Null Exception on Ad Url ");
                 }
+                dialog.dismiss();
             }
         });
         imgCancle.setOnClickListener(new View.OnClickListener() {
@@ -331,6 +372,10 @@ public class MobitechAds {
         });
         dialog.show();
         adLoaded=true;
+
+
+
+
         return dialog;
 
     }
