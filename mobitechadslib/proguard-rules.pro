@@ -19,3 +19,28 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepattributes EnclosingMethod
+# Retrofit
+-dontwarn retrofit2.**
+-dontwarn okhttp3.internal.platform.*
+
+-keepclasseswithmembers class * {
+    @retrofit2.* <methods>;
+}
+
+-keepclasseswithmembers interface * {
+    @retrofit2.* <methods>;
+}
+-keepattributes Signature
+-keepattributes Exceptions
+-keepattributes *Annotation*
+-keepattributes RuntimeVisibleAnnotations
+-keepattributes RuntimeInvisibleAnnotations
+-keepattributes RuntimeVisibleParameterAnnotations
+-keepattributes RuntimeInvisibleParameterAnnotations
+#keep the models
+-keep class com.ads.mobitechadslib.model.** { <fields>; }
+-keep class retrofit2.** { *; }
+-keep class com.google.gson.** { *; }
+

@@ -21,17 +21,24 @@ public class MainActivity extends AppCompatActivity {
         context = MainActivity.this;
 
        // ....................Intertistial Ad ...............
-       MobitechAds.getIntertistialAd(
+      /* MobitechAds.getIntertistialAd(
                 MainActivity.this,
                applicationId,
                adCategory);
        // ...................End of Intertistial ad............
+       */
+        //----------------video ad------------------------------
+        MobitechAds.loadVideoAd(
+                MainActivity.this,
+                applicationId,
+                adCategory);
+        //----------------end video ad---------------------------
 
 
       // ----------------------Banner Ad --------------------.
-       mobiAdBanner = findViewById(R.id.bannerAd);
-       /*mobiAdBanner.getBannerAds(context,
-               adCategory);*/
+      /* mobiAdBanner = findViewById(R.id.bannerAd);
+       *//*mobiAdBanner.getBannerAds(context,
+               adCategory);*//*
 
         //Refreshing banner
         //For refreshing banner add refreshRate in minutes after category id
@@ -40,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 adCategory,1);
 
        //...............................end of banner ad ........................
-
+*/
 
 
 
