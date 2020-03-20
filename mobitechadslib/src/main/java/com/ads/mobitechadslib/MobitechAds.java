@@ -295,7 +295,7 @@ public class MobitechAds {
         final LinearLayout vidAdLoading = dialog.findViewById(R.id.vidAdLoading);
         final ImageView imgCancle = dialog.findViewById(R.id.cancle);
         //display video
-        videoView.setVideoPath(ad_video_link);
+        videoView.setVideoPath("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");//"http://techslides.com/demos/sample-videos/small.mp4"
         videoView.start();
 
         final Runnable updateVideoPlayProgress = new Runnable() {
