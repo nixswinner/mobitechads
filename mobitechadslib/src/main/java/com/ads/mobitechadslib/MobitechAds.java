@@ -316,7 +316,6 @@ public class MobitechAds {
                 }else{
                     //
                 }
-                Log.e("Vid","Runnable running");
                 mHandler.postDelayed(this, 1000);
             }
 
