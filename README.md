@@ -69,4 +69,12 @@ allprojects {
   ```
    MobitechAds.loadVideoAd(MainActivity.this,"applicationId","1");
   ```
+   # Proguard Rules
+   If your app release has minifyEnabled and shrinkResources set to true .
+   Then add the following proguard rules in your proguard-rules.pro
+   ```
+   #mobi -ads proguard rules
+   -keep class com.ads.mobitechadslib.model.** { <fields>; }
+   
+   ```
   
