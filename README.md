@@ -1,4 +1,4 @@
-# mobitechads
+# MobitechAds Android Library
 # Signup as developer at
 https://mobitechads.com/home/monetize
 
