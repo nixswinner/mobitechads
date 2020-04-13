@@ -2,6 +2,7 @@ package com.ads.mobitechads;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -10,12 +11,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ads.mobitechadslib.AdsModel;
 import com.ads.mobitechadslib.MobiAdBanner;
 import com.ads.mobitechadslib.MobitechAds;
+import com.ads.mobitechadslib.model.AdsCategory;
 
 public class MainActivity extends AppCompatActivity {
     private AdsModel adsModel ;
     private MobiAdBanner mobiAdBanner;
-    private String adCategory="5";
-    private String applicationId="562024";
+    //AdsCategory Category
+    /*
+    Mobi Ads Categories
+        News
+        Entertainment
+        Sport
+        Business
+        Games
+        Education
+        TestAds - development purpose
+    * */
+    private String adCategory= AdsCategory.TestAds;
+    private String applicationId=getString(R.string.mobi_app_id);
     private float BannerRefresh = 20;//default 20 seconds
     private Context context;
     private Button btnLoadVideoAd,btnBannerAd,btnIntertistialAd;
@@ -24,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = MainActivity.this;
-        // ----------------------Banner Ad --------------------.
+        // ----------------------Banner Ad initilization--------------------.
         mobiAdBanner = findViewById(R.id.bannerAd);
 
         btnBannerAd = findViewById(R.id.btnBannnerAd);

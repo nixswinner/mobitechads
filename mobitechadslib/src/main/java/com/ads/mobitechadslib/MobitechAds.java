@@ -44,6 +44,8 @@ public class MobitechAds {
     static boolean adLoaded=false;
     static Long videoDuration=0L;
     static Long currentTime=0L;
+
+
     //show intertistial
     public static void getIntertistialAd(final Activity activity, final String applicationId,
                                          final String categoryId) {
