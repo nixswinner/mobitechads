@@ -10,7 +10,7 @@ Implements the mobitech ads
 # Setup.
 1.Add gradle dependency on build.gradle (app).
 ```
-  implementation 'com.github.nixswinner:mobitechads:1.1.7'
+  implementation 'com.github.nixswinner:mobitechads:1.1.8'
 ```
 2.Add on build.gradle project under all allprojects repositories.
 ```
@@ -46,13 +46,22 @@ allprojects {
   ```
   MobiAdBanner bannerAd = findViewById(R.id.bannerAd);
   ```
-  2.Load ads - specify ads category_id and pass the activity context applicationId - found at 
+  2.Load ads - specify ads category_id and pass the activity context applicationId {get at https://ads.mobitechads.com } signup and create your app
+     ***Categories available
+        News,
+        Entertainment,
+        Sport,
+        Business,
+        Games,
+        Education,
+        TestAds - {development purpose} ***
+       
   ```
-  bannerAd.getBannerAds(this,"applicationId","1");
+  bannerAd.getBannerAds(this,"applicationId",AdsCategory.TestAds);
   ```
   3.Auto Refresh banner - pass refresh rate (in minutes ) as an integer
   ```
-   bannerAd3.getBannerAds(this, "1", 1); //refresh after 1 minute
+   bannerAd3.getBannerAds(this, AdsCategory.TestAds, 1); //refresh after 1 minute
   ```
   
   # Add Intertistial ad.
@@ -60,14 +69,14 @@ allprojects {
   Add the following code snippet on the activity logic
   It takes 3 parameters - context and ads category_id - string and your developer app id {get one at https://ads.mobitechads.com } - signup and create your app
   ```
-   MobitechAds.getIntertistialAd(MainActivity.this,"applicationId","1");
+   MobitechAds.getIntertistialAd(MainActivity.this,"applicationId",AdsCategory.TestAds);
   ```
    # Add Video ad.
   
   Add the following code snippet on the activity logic
   It takes 3 parameters - context and ads category_id - string and your developer app id {get one at https://ads.mobitechads.com } - signup and create your app
   ```
-   MobitechAds.loadVideoAd(MainActivity.this,"applicationId","1");
+   MobitechAds.loadVideoAd(MainActivity.this,"applicationId",AdsCategory.TestAds);
   ```
    # Proguard Rules
    If your app release has minifyEnabled and shrinkResources set to true .
