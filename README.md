@@ -46,15 +46,14 @@ allprojects {
   ```
   MobiAdBanner bannerAd = findViewById(R.id.bannerAd);
   ```
-  2.Load ads - specify ads category_id and pass the activity context applicationId {get at https://ads.mobitechads.com } signup and create your app
-     ***Categories available
-        News,
+  2.Load ads - specify ads category_id and pass the activity context applicationId {get at https://ads.mobitechads.com } signup and create your app Categories available:
+        ***News,
         Entertainment,
         Sport,
         Business,
         Games,
         Education,
-        TestAds - {development purpose} ***
+        TestAds - {development purpose}***
        
   ```
   bannerAd.getBannerAds(this,"applicationId",AdsCategory.TestAds);
