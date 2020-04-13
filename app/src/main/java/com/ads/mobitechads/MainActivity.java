@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         TestAds - development purpose
     * */
     private String adCategory= AdsCategory.TestAds;
-    private String applicationId=getString(R.string.mobi_app_id);
     private float BannerRefresh = 20;//default 20 seconds
     private Context context;
     private Button btnLoadVideoAd,btnBannerAd,btnIntertistialAd;
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadBannerAd(){
         showToast("Loading Mobitech Banner Ad");
         mobiAdBanner.setVisibility(View.VISIBLE);
-        mobiAdBanner.getBannerAds(context,applicationId,
+        mobiAdBanner.getBannerAds(context,getString(R.string.mobi_app_id),
                 adCategory,1);
     }
 
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         showToast("Loading Mobitech Intertistial Ad");
         MobitechAds.getIntertistialAd(
                 MainActivity.this,
-                applicationId,
+                getString(R.string.mobi_app_id),
                 adCategory);
         // ...................End of Intertistial ad............
     }
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         showToast("Loading Mobitech video Advertisement");
         MobitechAds.loadVideoAd(
                 MainActivity.this,
-                applicationId,
+                getString(R.string.mobi_app_id),
                 adCategory);
         //----------------end video ad---------------------------
 

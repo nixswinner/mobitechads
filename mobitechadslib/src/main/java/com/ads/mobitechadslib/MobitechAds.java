@@ -238,7 +238,7 @@ public class MobitechAds {
         }
     }
 
-    private static void showVideoAd(String categoryId,
+    private static void showVideoAd(final String categoryId,
                                     final String applicationId,
                                     final String country_code,
                                     final Activity activity){
@@ -256,7 +256,6 @@ public class MobitechAds {
                                 populateVideoAdsList(response.body().getData(),activity);
                                 AppUsageDetails.getInstance(activity,applicationId,country_code);
                             }
-
                         }else {
                             Log.e("Mobitech VideoAd","Ad Failed to Load ");
                         }
@@ -274,6 +273,8 @@ public class MobitechAds {
                     adList.getInterstitial_urlandroid());
         }else {
             Log.i("Mobitech Video Ad","No video ad available at the moment");
+            showIntertistial(activity,adList.getInterstitial_upload(),
+                    adList.getInterstitial_urlandroid());
         }
     }
 
